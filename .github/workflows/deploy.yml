@@ -26,7 +26,14 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-  building-and-registry-image:
+  building--image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build image
+        run: docker build --platform linux/amd64 -t laptop-pricing-api .
+
+  registry-image:
+    needs: getting-credentials
     runs-on: ubuntu-latest
     steps:
       - name: Build image
@@ -39,6 +46,7 @@ jobs:
         run: docker push 989944764342.dkr.ecr.us-east-1.amazonaws.com/laptop-pricing-api:latest
   
   update-lambda:
+    needs: [getting-credentials, registry-image]
     runs-on: ubuntu-latest
     steps:
       - name: Update Lambda
