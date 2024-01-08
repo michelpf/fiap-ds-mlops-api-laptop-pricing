@@ -5,7 +5,7 @@ on:
     branches: [ "master" ]
 
 jobs:
-  build-and-push:
+  getting-credentials:
     runs-on: ubuntu-latest
 
     permissions:
@@ -26,6 +26,9 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
+  building-and-registry-image:
+    runs-on: ubuntu-latest
+    steps:
       - name: Build image
         run: docker build --platform linux/amd64 -t laptop-pricing-api .
       
@@ -34,6 +37,9 @@ jobs:
 
       - name: Register in ECR
         run: docker push 989944764342.dkr.ecr.us-east-1.amazonaws.com/laptop-pricing-api:latest
-
+  
+  update-lambda:
+    runs-on: ubuntu-latest
+    steps:
       - name: Update Lambda
         run: aws lambda update-function-code --function-name laptop-pricing-api --image-uri 989944764342.dkr.ecr.us-east-1.amazonaws.com/laptop-pricing-api:latest
