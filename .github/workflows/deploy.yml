@@ -5,15 +5,7 @@ on:
     branches: [ "master" ]
 
 jobs:
-
-  checkout-repo:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
-
-  getting-credentials:
+  build-push-imagem-deploy:
     runs-on: ubuntu-latest
 
     permissions:
@@ -21,6 +13,9 @@ jobs:
       contents: read
 
     steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -31,26 +26,14 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-  build-image:
-    needs: checkout-repo
-    runs-on: ubuntu-latest
-    steps:
       - name: Build image
         run: docker build --platform linux/amd64 -t laptop-pricing-api .
-
-  registry-image:
-    needs: [build-image, getting-credentials]
-    runs-on: ubuntu-latest
-    steps:
+      
       - name: Tag to ECR
         run: docker tag laptop-pricing-api:latest 989944764342.dkr.ecr.us-east-1.amazonaws.com/laptop-pricing-api:latest
 
       - name: Register in ECR
         run: docker push 989944764342.dkr.ecr.us-east-1.amazonaws.com/laptop-pricing-api:latest
-  
-  update-lambda:
-    needs: [getting-credentials, registry-image]
-    runs-on: ubuntu-latest
-    steps:
+
       - name: Update Lambda
         run: aws lambda update-function-code --function-name laptop-pricing-api --image-uri 989944764342.dkr.ecr.us-east-1.amazonaws.com/laptop-pricing-api:latest
