@@ -35,5 +35,5 @@ jobs:
       - name: Register in ECR
         run: docker push 989944764342.dkr.ecr.us-east-1.amazonaws.com/laptop-pricing-api:latest
 
-       - name: Update Lambda
+      - name: Update Lambda
         run: aws lambda update-function-code --function-name laptop-pricing-api --image-uri 989944764342.dkr.ecr.us-east-1.amazonaws.com/laptop-pricing-api:latest
