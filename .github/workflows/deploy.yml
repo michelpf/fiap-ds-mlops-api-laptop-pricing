@@ -38,7 +38,7 @@ jobs:
         run: dvc config --global studio.token ${{ secrets.DVC_STUDIO_ACCESS_KEY }}
       
       - name: Model download
-        run: dvc artifacts get https://github.com/michelpf/fiap-ds-mlops-laptop-pricing laptop-pricing --rev v1.0.3 -f
+        run: dvc artifacts get https://github.com/michelpf/fiap-ds-mlops-laptop-pricing laptop-pricing -f
 
       - name: Unit testing
         run: pytest
