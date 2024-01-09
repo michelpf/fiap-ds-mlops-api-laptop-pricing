@@ -35,7 +35,7 @@ jobs:
         run: python -m pip install -r requirements.txt
   
       - name: Model download
-        run: dvc config --global studio.token ${{ secrets.DVC_STUDIO_ACCESS_KEY }}
+        run: $ curl "https://studio.iterative.ai/api/model-registry/get-download-uris?repo=github:michelpf/fiap-ds-mlops-laptop-pricing&name=laptop-pricing&version=v1.0.3" --header "Authorization:token ${{ secrets.DVC_STUDIO_ACCESS_KEY }}"
       
       - name: Model download
         run: dvc artifacts get https://github.com/michelpf/fiap-ds-mlops-laptop-pricing laptop-pricing --rev v1.0.3
