@@ -5,10 +5,9 @@ model = joblib.load("model.pkl")
 def handler(event, context):
 
     data = event["data"]
-    data_processed = prepare_payload(data)
-
-    print(data_processed)    
+    print(data)  
     
+    data_processed = prepare_payload(data)
     prediction = model.predict([data_processed])
 
     print(prediction)
