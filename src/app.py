@@ -15,7 +15,7 @@ def handler(event, context):
 
     return {  
         'statusCode': 200,
-        'prediction': int(prediction),
+        'prediction': int(prediction[0]),
     }
 
 def prepare_payload(data):
