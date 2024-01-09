@@ -26,6 +26,19 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
+      - name: Install dependencies
+        run: python install -r requirements.txt
+
+      - name: Model download
+        run: dvc config --global studio.token ${{ secrets.DVC_STUDIO_ACCESS_KEY }}
+      
+      - name: Model download
+        run: dvc artifacts get https://github.com/michelpf/fiap-ds-mlops-laptop-pricing laptop-pricing --rev v1.0.3
+
+      - name: Unit testing
+        run: pytest
+        
+
       - name: Build image
         run: docker build --platform linux/amd64 -t laptop-pricing-api .
       
