@@ -42,7 +42,7 @@ jobs:
         run: dvc artifacts get https://github.com/michelpf/fiap-ds-mlops-laptop-pricing laptop-pricing -f
 
       - name: Tag version download
-        run: curl  "https://api.github.com/repos/michelpf/fiap-ds-mlops-laptop-pricing/tags" | jq -r '.[0].name' > model_version.txt
+        run: curl  "https://api.github.com/repos/michelpf/fiap-ds-mlops-laptop-pricing/tags" | jq -r '.[0].name' | tr -d '\n' > model_version.txt
 
 
       - name: Unit testing
