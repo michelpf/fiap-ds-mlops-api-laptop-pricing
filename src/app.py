@@ -1,6 +1,7 @@
 import joblib
 
 model = joblib.load("model.pkl")
+model_version = content = open("model_version.txt", "r").read()
 
 def handler(event, context):
 
@@ -15,6 +16,7 @@ def handler(event, context):
     return {  
         'statusCode': 200,
         'prediction': int(prediction[0]),
+        'version': model_version
     }
 
 def prepare_payload(data):
