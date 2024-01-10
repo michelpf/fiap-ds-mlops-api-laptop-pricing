@@ -2,6 +2,16 @@ import joblib
 import json
 import requests
 
+def get_model_version():
+    response = requests.get('https://api.github.com/repos/michelpf/fiap-ds-mlops-laptop-pricing/tags')
+    data = response.json()
+    
+    filtered_tags = [tag for tag in data if 'laptop-pricing@v' in tag['name']]
+    sorted_tags = sorted(filtered_tags, key=lambda k: k['name'])
+    latest_tag_name = sorted_tags[-1]['name']
+    
+    return latest_tag_name
+
 model = joblib.load("model.pkl")
 model_version = get_model_version()
 
@@ -22,15 +32,7 @@ def handler(event, context):
     }
 
 
-def get_model_version():
-    response = requests.get('https://api.github.com/repos/michelpf/fiap-ds-mlops-laptop-pricing/tags')
-    data = response.json()
-    
-    filtered_tags = [tag for tag in data if 'laptop-pricing@v' in tag['name']]
-    sorted_tags = sorted(filtered_tags, key=lambda k: k['name'])
-    latest_tag_name = sorted_tags[-1]['name']
-    
-    return latest_tag_name
+
 
 def prepare_payload(data):
 
