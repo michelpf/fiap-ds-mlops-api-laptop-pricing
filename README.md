@@ -10,7 +10,7 @@ Utilizado modelo basedo em container, implementado no modelo serverless utilizan
 
 O handler da API espera entrada de dados no formato JSON, como no exemplo as seguir:
 
-json```
+```json
 {
   "data": {
     "brand": "dell",
@@ -30,11 +30,12 @@ json```
 }
 ```
 
+
 Todos os parâmetros precisam ser enviados, obrigatoriamente.
 
 O resultado é retornado no formato JSON, informando o valor da predição e a versão do modelo.
 
-json```
+```json
 {
   "statusCode": 200,
   "prediction": 55198,
