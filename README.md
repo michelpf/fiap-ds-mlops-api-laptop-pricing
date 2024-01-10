@@ -38,6 +38,6 @@ json```
 {
   "statusCode": 200,
   "prediction": 55198,
-  "version": "linear_regression@v1.0.0
+  "version": "linear_regression@v1.0.0"
 }
 ```
