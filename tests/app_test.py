@@ -5,6 +5,10 @@ def test_model_exists():
     arquivo_path = Path("model.pkl")
     assert arquivo_path.is_file()
 
+def test_model_version_exists():
+    arquivo_path = Path("model_version.txt")
+    assert arquivo_path.is_file()
+
 def test_handler_call():
     payload = {
         "brand": "dell",
