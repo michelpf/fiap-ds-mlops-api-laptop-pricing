@@ -50,7 +50,7 @@ jobs:
       - name: Tag version download
         run: |
           curl "https://api.github.com/repos/michelpf/fiap-ds-mlops-laptop-pricing/tags" | jq -r '.[] | select(.name | contains("laptop-pricing@v")) | .name | match("@v([^#]+)#") .captures[0].string' | head -n 1 | tr -d '\n' > model_version.txt
-          curl "https://api.github.com/repos/michelpf/fiap-ds-mlops-laptop-pricing/tags" | jq -r '.[] | select(.name | contains("laptop-pricing@v")) | "Model version: " + .name | match("@v([^#]+)#") .captures[0].string' | head -n 1 | tr -d '\n' >> $GITHUB_STEP_SUMMARY
+          curl "https://api.github.com/repos/michelpf/fiap-ds-mlops-laptop-pricing/tags" | jq -r '.[] | select(.name | contains("laptop-pricing@v")) | "Model version: " + (.name | match("@v([^#]+)#") .captures[0].string)' | head -n 1 | tr -d '\n' >> $GITHUB_STEP_SUMMARY
 
       - name: Unit testing
         run: pytest
