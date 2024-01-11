@@ -38,12 +38,19 @@ jobs:
       - name: Login to DVC
         run: dvc config --global studio.token ${{ secrets.DVC_STUDIO_ACCESS_KEY }}
       
+      - name: Adding markdown
+        run: echo ‘### Summary’ >> $GITHUB_STEP_SUMMARY
+
       - name: Model download
         run: dvc artifacts get https://github.com/michelpf/fiap-ds-mlops-laptop-pricing laptop-pricing -f
+      
+      - name: Getting model size
+        run: du -h model.pkl  | awk '{print $1}' >> $GITHUB_STEP_SUMMARY
 
       - name: Tag version download
-        run: curl "https://api.github.com/repos/michelpf/fiap-ds-mlops-laptop-pricing/tags" | jq -r '.[] | select(.name | contains("laptop-pricing@v")) | .name | match("@v([^#]+)#") .captures[0].string' | head -n 1 | tr -d '\n' > model_version.txt
-
+        run: |
+          curl "https://api.github.com/repos/michelpf/fiap-ds-mlops-laptop-pricing/tags" | jq -r '.[] | select(.name | contains("laptop-pricing@v")) | .name | match("@v([^#]+)#") .captures[0].string' | head -n 1 | tr -d '\n' > model_version.txt
+          curl "https://api.github.com/repos/michelpf/fiap-ds-mlops-laptop-pricing/tags" | jq -r '.[] | select(.name | contains("laptop-pricing@v")) | .name | match("@v([^#]+)#") .captures[0].string' | head -n 1 | tr -d '\n' >> $GITHUB_STEP_SUMMARY
 
       - name: Unit testing
         run: pytest
