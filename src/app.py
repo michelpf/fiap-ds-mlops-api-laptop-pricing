@@ -5,6 +5,8 @@ model_version = conteudo = open("model_version.txt", 'r').read()
 
 def handler(event, context):
 
+    print(event)
+      
     data = event["data"]
     print(data)  
     
