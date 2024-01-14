@@ -1,7 +1,33 @@
 import joblib
+import boto3
 
 model = joblib.load("model.pkl")
 model_version = conteudo = open("model_version.txt", 'r').read()
+
+cloudwatch = boto3.client("cloudwatch")
+
+def input_metrics(data, prediction):
+    cloudwatch.put_metric_data(
+        MetricData = [
+            {
+                'MetricName': 'Price Prediction',
+                'Value': prediction,
+                'Dimensions': [{'Name': "Currency", 'Value': "INR"}]
+            },
+        ], Namespace='Laptop Pricing Model')
+
+    for key, value in data.items():
+         cloudwatch.put_metric_data(
+        MetricData = [
+            {
+                'MetricName': 'Latptop Feature ',
+                'Value': 1,
+                'Unit': 'Count',
+                'Dimensions': [{'Name': key, 'Value': value}]
+            },
+        ], Namespace='Laptop Pricing Features')
+
+
 
 def handler(event, context):
 
@@ -14,6 +40,8 @@ def handler(event, context):
     prediction = model.predict([data_processed])
 
     print(prediction)
+
+    input_metrics(data, prediction[0])
 
     return {  
         'statusCode': 200,
