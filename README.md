@@ -1,6 +1,6 @@
 [![Build and Push to ECR](https://github.com/michelpf/fiap-ds-mlops-api-laptop-pricing/actions/workflows/deploy.yml/badge.svg)](https://github.com/michelpf/fiap-ds-mlops-api-laptop-pricing/actions/workflows/deploy.yml)
 
-# API Laptop Pricing
+# API de Predição de Preço de Laptops
 
 Serviço para predição de preço de laptop baseado em determinadas características, como marca, procesador, armazenamento e etc.
 
@@ -42,3 +42,14 @@ O resultado é retornado no formato JSON, informando o valor da predição e a v
   "version": "linear_regression@v1.0.0"
 }
 ```
+
+## Uso
+
+Este repositório possui os seguintes módulos:
+
+* Teste de unidade na pasta ```tests``` implementado com [Pytest](https://docs.pytest.org/en/7.4.x/).
+Os testes avaliam a integridade do modelo, parâmetros de entrada, versionamento, dentre outros. 
+
+* Arquivo de montagem do container Docker, contendo as instruções para empacotamento da imagem incluindo dependências e o modelo.
+
+* O arquivo ```test.py``` é uma forma rápida para interagir com o código sem necessitar montar uma imagem. Permite depurar o código localmente mais facilmente.
