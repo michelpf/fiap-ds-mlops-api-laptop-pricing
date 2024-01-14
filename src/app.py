@@ -41,11 +41,13 @@ def handler(event, context):
 
     print(prediction)
 
-    input_metrics(data, prediction[0])
+    prediction = int(prediction[0])
+
+    input_metrics(data, prediction)
 
     return {  
         'statusCode': 200,
-        'prediction': int(prediction[0]),
+        'prediction': int(prediction),
         'version': model_version
     }
 
