@@ -106,4 +106,4 @@ while True:
 
   #app.handler(event, "")  
   consume_service(event)  
-  time.sleep(random.uniform(1, 5))
+  time.sleep(random.uniform(1, 30))

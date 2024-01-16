@@ -35,8 +35,6 @@ def write_real_data(data, prediction):
 
     s3.put_object(Body=updated_content, Bucket=bucket_name, Key=f'{s3_path}/{file_name}')
 
-    
-
 def input_metrics(data, prediction):
     cloudwatch.put_metric_data(
         MetricData = [
@@ -88,6 +86,12 @@ def prepare_payload(data):
 
     data_processed = []
 
+    data_processed.append(int(data["ram_gb"]))
+    data_processed.append(int(data["ssd"]))
+    data_processed.append(int(data["hdd"]))
+    data_processed.append(int(data["graphic_card"]))
+    data_processed.append(int(data["warranty"]))
+
     data_processed.append(1) if data["brand"] == "asus" else data_processed.append(0)
     data_processed.append(1) if data["brand"] == "dell" else data_processed.append(0)
     data_processed.append(1) if data["brand"] == "hp" else data_processed.append(0)
@@ -112,37 +116,9 @@ def prepare_payload(data):
     data_processed.append(1) if data["weight"] == "gaming" else data_processed.append(0)
     data_processed.append(1) if data["weight"] == "thinnlight" else data_processed.append(0)
 
-    data_processed.append(1) if data["warranty"] == "0" else data_processed.append(0)
-    data_processed.append(1) if data["warranty"] == "1" else data_processed.append(0)
-    data_processed.append(1) if data["warranty"] == "2" else data_processed.append(0)
-    data_processed.append(1) if data["warranty"] == "3" else data_processed.append(0)
-
     data_processed.append(1) if data["touchscreen"] == "0" else data_processed.append(0)
     data_processed.append(1) if data["touchscreen"] == "1" else data_processed.append(0)
-    
-    data_processed.append(1) if data["ram_gb"] == "4" else data_processed.append(0)
-    data_processed.append(1) if data["ram_gb"] == "8" else data_processed.append(0)
-    data_processed.append(1) if data["ram_gb"] == "16" else data_processed.append(0)
-    data_processed.append(1) if data["ram_gb"] == "32" else data_processed.append(0)
-
-    data_processed.append(1) if data["hdd"] == "0" else data_processed.append(0)
-    data_processed.append(1) if data["hdd"] == "512" else data_processed.append(0)
-    data_processed.append(1) if data["hdd"] == "1024" else data_processed.append(0)
-    data_processed.append(1) if data["hdd"] == "2048" else data_processed.append(0)
-
-    data_processed.append(1) if data["ssd"] == "0" else data_processed.append(0)
-    data_processed.append(1) if data["ssd"] == "128" else data_processed.append(0)
-    data_processed.append(1) if data["ssd"] == "256" else data_processed.append(0)
-    data_processed.append(1) if data["ssd"] == "512" else data_processed.append(0)
-    data_processed.append(1) if data["ssd"] == "1024" else data_processed.append(0)
-    data_processed.append(1) if data["ssd"] == "2048" else data_processed.append(0)
-    data_processed.append(1) if data["ssd"] == "3072" else data_processed.append(0)
-
-    data_processed.append(1) if data["graphic_card"] == "4" else data_processed.append(0)
-    data_processed.append(1) if data["graphic_card"] == "8" else data_processed.append(0)
-    data_processed.append(1) if data["graphic_card"] == "16" else data_processed.append(0)
-    data_processed.append(1) if data["graphic_card"] == "32" else data_processed.append(0)
-
+   
     data_processed.append(1) if data["ram_type"] == "ddr4" else data_processed.append(0)
     data_processed.append(1) if data["ram_type"] == "other" else data_processed.append(0)
 
