@@ -9,8 +9,13 @@ cloudwatch = boto3.client("cloudwatch")
 
 
 def write_real_data(data, prediction):
-    file_name = f"{datetime.now().strftime('%Y-%m')}_laptop_prediction_data.csv"
+
+    now = datetime.now()
+    now_formatted = now.strftime("%d-%m-%Y %H:%M")
+
+    file_name = f"{now.strftime('%Y-%m-%d')}_laptop_prediction_data.csv"
     data["price"] = prediction
+    data["timestamp"] = now_formatted
     
     s3 = boto3.client("s3")
     bucket_name = "fiap-ds-mlops"
