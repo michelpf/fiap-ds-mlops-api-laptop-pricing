@@ -52,7 +52,7 @@ def input_metrics(data, prediction):
                 'MetricName': 'Latptop Feature ',
                 'Value': 1,
                 'Unit': 'Count',
-                'Dimensions': [{'Name': key, 'Value': value}]
+                'Dimensions': [{'Name': key, 'Value': str(value)}]
             },
         ], Namespace='Laptop Pricing Features')
 

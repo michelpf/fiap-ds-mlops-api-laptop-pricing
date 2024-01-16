@@ -41,12 +41,17 @@ process_brand = ["amd", "intel", "m1"]
 processor_name = ["core i3", "core i5", "core i7", "other", "ryzen 5", "ryzen 7"]
 operation_system = ["other", "windows"]
 weight = ["casual", "gaming", "thinnlight"]
-warranty = ["0", "1", "2", "3"]
+#warranty = ["0", "1", "2", "3"]
+warranty = random.randrange(0, 5, 1)
 touchscreen = ["0", "1"]
-ram_gb = ["4", "8", "16", "32"]
-hdd = ["0", "512", "1024", "2048"]
-ssd = ["0", "128", "256", "512", "1024", "2048", "3072"]
-graphic_card = ["4", "8", "16", "32"]
+#ram_gb = ["4", "8", "16", "32"]
+ram_gb = random.randrange(4, 256, 4)
+#hdd = ["0", "512", "1024", "2048"]
+hdd = random.randrange(0, 8000, 512)
+#ssd = ["0", "128", "256", "512", "1024", "2048", "3072"]
+ssd = random.randrange(0, 4000, 512)
+#graphic_card = ["4", "8", "16", "32"]
+graphic_card = random.randrange(4, 256, 3)
 ram_type = ["ddr4", "other"]
 os_bit = ["32", "64"]
 
@@ -55,11 +60,11 @@ os_bit = ["32", "64"]
 
 while True:
 
-  ssd_v = "0"
-  hdd_v = random.choice(hdd)
-  if hdd_v == "0":
-    ssd_v = random.choice(ssd)
-    if ssd_v == "0":
+  ssd_v = 0
+  hdd_v = random.randrange(0, 8000, 512)
+  if hdd_v == 0:
+    ssd_v = random.randrange(0, 4000, 512)
+    if ssd_v == 0:
       ssd_v = ssd[0]
 
   process_brand_v = random.choice(process_brand)
@@ -70,7 +75,7 @@ while True:
     os_v = "other"
     weight_v = "thinnlight"
     touchscreen_v = "0"
-    ram_gb_v = random.choice(["8", "16"])
+    ram_gb_v = random.choice(["8", "16", "24"])
     graphic_card_v = "8"
     ram_type_v="other"
     os_bit_v = "64"
@@ -82,8 +87,8 @@ while True:
     os_v = random.choice(operation_system)
     weight_v = random.choice(weight)
     touchscreen_v = random.choice(touchscreen)
-    ram_gb_v = random.choice(ram_gb)
-    graphic_card_v = random.choice(graphic_card)
+    ram_gb_v =  random.randrange(4, 256, 4)
+    graphic_card_v = graphic_card = random.randrange(4, 256, 4)
     ram_type_v = random.choice(ram_type) 
     os_bit_v = random.choice(os_bit) 
 
@@ -94,16 +99,16 @@ while True:
     "processor_name": processor_name_v,
     "os": os_v,
     "weight": weight_v,
-    "warranty": random.choice(warranty),
+    "warranty": int(random.randint(0, 5)),
     "touchscreen": touchscreen_v,
     "ram_gb": ram_gb_v,
-    "hdd": hdd_v,
+    "hdd": int(hdd_v),
     "ssd": ssd_v,
     "graphic_card": graphic_card_v,
     "ram_type": ram_type_v,
     "os_bit": os_bit_v
  }
 
-  #app.handler(event, "")  
-  consume_service(event)  
-  time.sleep(random.uniform(1, 30))
+  app.handler(event, "")  
+  #consume_service(event)  
+  #time.sleep(random.uniform(1, 30))
