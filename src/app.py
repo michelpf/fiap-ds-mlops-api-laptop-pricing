@@ -14,8 +14,10 @@ def write_real_data(data, prediction):
     now_formatted = now.strftime("%d-%m-%Y %H:%M")
 
     file_name = f"{now.strftime('%Y-%m-%d')}_laptop_prediction_data.csv"
+   
     data["price"] = prediction
     data["timestamp"] = now_formatted
+    data["model_version"] = model_version
     
     s3 = boto3.client("s3")
     bucket_name = "fiap-ds-mlops"

@@ -17,11 +17,12 @@ def consume_service(data):
 
   response = requests.post(endpoint, data=json.dumps(data), headers=headers)
 
+  print(response.status_code)
+  print(response.text)
+  
   if response.status_code == 200:
       result = (response.json())
       print(result)
-  else:
-      print("Error")
 
 
 with open('data.json') as data_file:
@@ -105,4 +106,4 @@ while True:
 
   #app.handler(event, "")  
   consume_service(event)  
-  time.sleep(random.uniform(1, 60))
+  time.sleep(random.uniform(1, 5))
