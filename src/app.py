@@ -1,10 +1,34 @@
 import joblib
 import boto3
+from datetime import datetime
 
 model = joblib.load("model.pkl")
 model_version = conteudo = open("model_version.txt", 'r').read()
 
 cloudwatch = boto3.client("cloudwatch")
+
+
+def write_real_data(data, prediction):
+    file_name = f"{datetime.now().strftime('%Y-%m')}_laptop_prediction_data.csv"
+    data["price"] = prediction
+    
+    s3 = boto3.client("s3")
+    bucket_name = "fiap-ds-mlops"
+    s3_path = "laptop-prediction-real-data"
+
+    try:
+        existing_object = s3.get_object(Bucket=bucket_name, Key=f'{s3_path}/{file_name}')
+        existing_data = existing_object['Body'].read().decode('utf-8').strip().split('\n')
+        existing_data.append(','.join(map(str, data.values())))
+        updated_content = '\n'.join(existing_data)
+    except s3.exceptions.NoSuchKey:
+        # Se o arquivo não existir, cria um novo
+        updated_content = ','.join(data.keys()) + '\n' + ','.join(map(str, data.values()))
+
+
+    s3.put_object(Body=updated_content, Bucket=bucket_name, Key=f'{s3_path}/{file_name}')
+
+    
 
 def input_metrics(data, prediction):
     cloudwatch.put_metric_data(
@@ -44,6 +68,7 @@ def handler(event, context):
     prediction = int(prediction[0])
 
     input_metrics(data, prediction)
+    write_real_data(data, prediction)
 
     return {  
         'statusCode': 200,
