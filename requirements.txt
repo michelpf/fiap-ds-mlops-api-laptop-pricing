@@ -5,3 +5,4 @@ scikit-learn == 1.3.2
 pytest == 7.4.4
 xgboost == 2.0.3
 boto3 == 1.33.13
+gto == 1.6.2

@@ -63,9 +63,9 @@ while True:
   ssd_v = 0
   hdd_v = random.randrange(0, 8000, 512)
   if hdd_v == 0:
-    ssd_v = random.randrange(0, 4000, 512)
+    ssd_v = random.randrange(0, 4000, 128)
     if ssd_v == 0:
-      ssd_v = ssd[0]
+      ssd_v = random.randrange(128, 4000, 128)
 
   process_brand_v = random.choice(process_brand)
 
@@ -111,4 +111,4 @@ while True:
 
   app.handler(event, "")  
   #consume_service(event)  
-  #time.sleep(random.uniform(1, 30))
+  #time.sleep(random.uniform(1, 2*60))
