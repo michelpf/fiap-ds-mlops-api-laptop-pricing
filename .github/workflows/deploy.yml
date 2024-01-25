@@ -42,7 +42,7 @@ jobs:
         run: echo "### Summary" >> $GITHUB_STEP_SUMMARY
 
       - name: Model download
-        run: dvc artifacts get https://github.com/michelpf/fiap-ds-mlops-laptop-pricing laptop-pricing -f
+        run: dvc artifacts get https://github.com/michelpf/fiap-ds-mlops-laptop-pricing laptop-pricing-india -f
       
       - name: Getting model size
         run: du -h model.pkl | cut -f1 | awk '{print "Model size:", $1}' >> $GITHUB_STEP_SUMMARY
