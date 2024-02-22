@@ -1,24 +1,42 @@
+"""
+Função para executar predição de valor de laptop com base nos parâmetros enviados, 
+como modelo, processador, memória etc.
+Utiliza modelo que precisa ser baixado do repositório de registro de modelos em toda 
+implantação nova.
+"""
+
+from datetime import datetime
 import joblib
 import boto3
-from datetime import datetime
+
 
 model = joblib.load("model.pkl")
-model_version = open("model_version.txt", 'r').read()
+
+with open("model_version.txt", 'r', encoding='utf8') as file:
+    model_version = file.read()
 
 cloudwatch = boto3.client("cloudwatch")
 
 
 def write_real_data(data, prediction):
+    """
+    Função para escrever os dados consumidos para depois serem estudados 
+    para desvios de dados, modelo ou conceito.
+
+    Args:
+        data (dict): dicionário de dados com todos os atributos.
+        prediction (int): valor de predição
+    """
 
     now = datetime.now()
     now_formatted = now.strftime("%d-%m-%Y %H:%M")
 
     file_name = f"{now.strftime('%Y-%m-%d')}_laptop_prediction_data.csv"
-   
+
     data["price"] = prediction
     data["timestamp"] = now_formatted
     data["model_version"] = model_version
-    
+
     s3 = boto3.client("s3")
     bucket_name = "fiap-ds-mlops"
     s3_path = "laptop-prediction-real-data"
@@ -36,6 +54,14 @@ def write_real_data(data, prediction):
     s3.put_object(Body=updated_content, Bucket=bucket_name, Key=f'{s3_path}/{file_name}')
 
 def input_metrics(data, prediction):
+    """
+    Função para escrever métricas customizadas no Cloudwatch.
+
+    Args:
+        data (dict): dicionário de dados com todos os atributos.
+        prediction (int): valor de predição.
+    """
+
     cloudwatch.put_metric_data(
         MetricData = [
             {
@@ -46,7 +72,7 @@ def input_metrics(data, prediction):
         ], Namespace='Laptop Pricing Model')
 
     for key, value in data.items():
-         cloudwatch.put_metric_data(
+        cloudwatch.put_metric_data(
         MetricData = [
             {
                 'MetricName': 'Latptop Feature ',
@@ -59,12 +85,22 @@ def input_metrics(data, prediction):
 
 
 def handler(event, context):
+    """
+    Função principal de execução da API no Lambda
+
+    Args:
+        event (json): payload para processamento.
+        context (json): dados adicionais ao contexto (opcional).
+
+     Returns:
+        json: Predição de preço.
+    """
 
     print(event)
-      
+
     data = event["data"]
-    print(data)  
-    
+    print(data)
+
     data_processed = prepare_payload(data)
     prediction = model.predict([data_processed])
 
@@ -74,7 +110,7 @@ def handler(event, context):
     input_metrics(data, prediction)
     write_real_data(data, prediction)
 
-    return {  
+    return {
         'statusCode': 200,
         'prediction': int(prediction),
         'version': model_version
@@ -82,6 +118,17 @@ def handler(event, context):
 
 
 def prepare_payload(data):
+    """
+    Função para padronizar o payload de entrada de modo a 
+    ser compatível com a execução do modelo.
+
+    Args:
+        data (dict): dicionário de dados com todos os atributos.
+
+     Returns:
+        dict: payload padronizado.
+
+    """
 
     data_processed = []
 
@@ -91,37 +138,19 @@ def prepare_payload(data):
     data_processed.append(int(data["graphic_card"]))
     data_processed.append(int(data["warranty"]))
 
-    data_processed.append(1) if data["brand"] == "asus" else data_processed.append(0)
-    data_processed.append(1) if data["brand"] == "dell" else data_processed.append(0)
-    data_processed.append(1) if data["brand"] == "hp" else data_processed.append(0)
-    data_processed.append(1) if data["brand"] == "lenovo" else data_processed.append(0)
-    data_processed.append(1) if data["brand"] == "other" else data_processed.append(0)
+    conditions = {
+        "brand": {"dell", "hp", "lenovo", "other"},
+        "processor_brand": {"amd", "intel", "m1"},
+        "processor_name": {"core i3", "core i5", "core i7", "other", "ryzen 5", "ryzen 7"},
+        "os": {"other", "windows"},
+        "weight": {"casual", "gaming", "thinnlight"},
+        "touchscreen": {"0", "1"},
+        "ram_type": {"ddr4", "other"},
+        "os_bit": {"32", "64"}
+    }
 
-    data_processed.append(1) if data["processor_brand"] == "amd" else data_processed.append(0)
-    data_processed.append(1) if data["processor_brand"] == "intel" else data_processed.append(0)
-    data_processed.append(1) if data["processor_brand"] == "m1" else data_processed.append(0)
-    
-    data_processed.append(1) if data["processor_name"] == "core i3" else data_processed.append(0)
-    data_processed.append(1) if data["processor_name"] == "core i5" else data_processed.append(0)
-    data_processed.append(1) if data["processor_name"] == "core i7" else data_processed.append(0)
-    data_processed.append(1) if data["processor_name"] == "other" else data_processed.append(0)
-    data_processed.append(1) if data["processor_name"] == "ryzen 5" else data_processed.append(0)
-    data_processed.append(1) if data["processor_name"] == "ryzen 7" else data_processed.append(0)
-    
-    data_processed.append(1) if data["os"] == "other" else data_processed.append(0)
-    data_processed.append(1) if data["os"] == "windows" else data_processed.append(0)
-    
-    data_processed.append(1) if data["weight"] == "casual" else data_processed.append(0)
-    data_processed.append(1) if data["weight"] == "gaming" else data_processed.append(0)
-    data_processed.append(1) if data["weight"] == "thinnlight" else data_processed.append(0)
-
-    data_processed.append(1) if data["touchscreen"] == "0" else data_processed.append(0)
-    data_processed.append(1) if data["touchscreen"] == "1" else data_processed.append(0)
-   
-    data_processed.append(1) if data["ram_type"] == "ddr4" else data_processed.append(0)
-    data_processed.append(1) if data["ram_type"] == "other" else data_processed.append(0)
-
-    data_processed.append(1) if data["os_bit"] == "32" else data_processed.append(0)
-    data_processed.append(1) if data["os_bit"] == "64" else data_processed.append(0)
+    for key, values in conditions.items():
+        for value in values:
+            data_processed.append(1 if data[key] == value else 0)
 
     return data_processed
