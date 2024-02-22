@@ -56,7 +56,7 @@ jobs:
         run: pytest
 
       - name: Linting
-        run: pylint
+        run: pylint src
 
       - name: Build image
         run: docker build --platform linux/amd64 -t laptop-pricing-api .
