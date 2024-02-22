@@ -84,7 +84,7 @@ def input_metrics(data, prediction):
 
 
 
-def handler(event, context):
+def handler(event, context=False):
     """
     Função principal de execução da API no Lambda
 
@@ -97,6 +97,7 @@ def handler(event, context):
     """
 
     print(event)
+    print(context)
 
     data = event["data"]
     print(data)
@@ -139,7 +140,7 @@ def prepare_payload(data):
     data_processed.append(int(data["warranty"]))
 
     conditions = {
-        "brand": {"dell", "hp", "lenovo", "other"},
+        "brand": {"asus", "dell", "hp", "lenovo", "other"},
         "processor_brand": {"amd", "intel", "m1"},
         "processor_name": {"core i3", "core i5", "core i7", "other", "ryzen 5", "ryzen 7"},
         "os": {"other", "windows"},
