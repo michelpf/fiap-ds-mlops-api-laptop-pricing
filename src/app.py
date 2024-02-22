@@ -3,7 +3,7 @@ import boto3
 from datetime import datetime
 
 model = joblib.load("model.pkl")
-model_version = conteudo = open("model_version.txt", 'r').read()
+model_version = open("model_version.txt", 'r').read()
 
 cloudwatch = boto3.client("cloudwatch")
 
@@ -28,8 +28,8 @@ def write_real_data(data, prediction):
         existing_data = existing_object['Body'].read().decode('utf-8').strip().split('\n')
         existing_data.append(','.join(map(str, data.values())))
         updated_content = '\n'.join(existing_data)
+
     except s3.exceptions.NoSuchKey:
-        # Se o arquivo não existir, cria um novo
         updated_content = ','.join(data.keys()) + '\n' + ','.join(map(str, data.values()))
 
 
@@ -68,9 +68,8 @@ def handler(event, context):
     data_processed = prepare_payload(data)
     prediction = model.predict([data_processed])
 
-    print(prediction)
-
     prediction = int(prediction[0])
+    print("Prediction: " + str(prediction))
 
     input_metrics(data, prediction)
     write_real_data(data, prediction)

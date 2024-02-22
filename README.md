@@ -30,6 +30,25 @@ O handler da API espera entrada de dados no formato JSON, como no exemplo as seg
 }
 ```
 
+## Possibilidades de valores
+
+brand = ["asus", "dell", "hp", "lenovo", "other"]  (categoric)
+processor_brand = ["amd", "intel", "m1"] (categoric)
+processor_name = ["core i3", "core i5", "core i7", "other", "ryzen 5", "ryzen 7"] (categoric)
+os = ["other", "windows"] (categoric)
+weight = ["casual", "gaming", "thinnlight"] (categoric)
+warranty = ["0", "1", "2", "3"] (numeric)
+touchscreen = ["0", "1"] (categoric)
+ram_gb = ["4", "8", "16", "32"] (numeric)
+hdd = ["0", "512", "1024", "2048"] (numeric)
+ssd = ["0", "128", "256", "512", "1024", "2048", "3072"] (numeric)
+graphic_card = ["4", "8", "16", "32"] (numeric)
+ram_type = ["ddr4", "other"] (categoric)
+os_bit = ["32", "64"] (categoric)
+
+
+
+
 
 Todos os parâmetros precisam ser enviados, obrigatoriamente.
 
